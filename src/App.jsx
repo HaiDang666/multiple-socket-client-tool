@@ -1,13 +1,13 @@
-import "./App.css";
-import Connection from "./components/connection.jsx";
-import Listen from "./components/listen.jsx";
-import Emitter from "./components/emitter.jsx";
-import Ack from "./components/ack.jsx";
-import { useEffect, useState, useRef } from "react";
-import { io as io3 } from "socket.io-client";
-import io2 from "socket.io-client2";
-import { Container, Row, Col, Modal, Tabs, Tab } from "react-bootstrap";
-import { MdCloudDone, MdCloudOff, MdDoNotDisturb } from "react-icons/md";
+import './App.css';
+import Connection from './components/connection.jsx';
+import Listen from './components/listen.jsx';
+import Emitter from './components/emitter.jsx';
+import Ack from './components/ack.jsx';
+import { useEffect, useState, useRef } from 'react';
+import { io as io3 } from 'socket.io-client';
+import io2 from 'socket.io-client2';
+import { Container, Row, Col, Modal, Tabs, Tab } from 'react-bootstrap';
+import { MdCloudDone, MdCloudOff, MdDoNotDisturb } from 'react-icons/md';
 
 function App() {
   const [socket, setSocket] = useState(null);
@@ -20,18 +20,18 @@ function App() {
   isReadyRef.current = isReady;
 
   const [connData, setConnData] = useState({
-    server: "http://localhost:8080",
+    server: 'http://localhost:8080',
     config:
       '{"path": "/socket.io", "forceNew": true, "reconnectionAttempts": 3, "timeout": 2000}',
     numberConnection: 1,
     version: 3,
     welcomeEvent: '',
-    errors: [],
+    errors: []
   });
 
   const [appConfig, setAppConfig] = useState(0);
   const [eventsToListenFor, setEventsToListenFor] = useState([
-    "message",
+    'message'
   ]);
 
   const [listenTo, setListenTo] = useState([]);
@@ -46,10 +46,10 @@ function App() {
     setConnData(() => {
       return {
         server: url,
-        config: config,
-        numberConnection: numberConnection,
-        version: version,
-        errors: [],
+        config,
+        numberConnection,
+        version,
+        errors: []
       };
     });
 
@@ -65,10 +65,10 @@ function App() {
       for (let i = 0; i < numberConnection; i++) {
         const connection = {
           index: i,
-          socket: io.connect(url, JSON.parse(config)),
+          socket: io.connect(url, JSON.parse(config))
         };
 
-        connection.socket.on("connect", () => {
+        connection.socket.on('connect', () => {
           if (i === numberConnection - 1) {
             setIsConnected(true);
             setIsLoading(false);
@@ -92,7 +92,7 @@ function App() {
     if (socket === null) {
       return;
     }
-    socket.on("connect", () => {
+    socket.on('connect', () => {
       if (isReadyRef.current === true) {
         return;
       }
@@ -119,17 +119,17 @@ function App() {
       if (!listenTo.includes(channel)) {
         channelsToAdd.push(channel);
         socket.on(channel, (response) => {
-          console.log("data received", channel, response);
+          console.log('data received', channel, response);
           const d = new Date();
           const data = {
             key: d.toLocaleString(),
             date: d,
-            channel: channel,
+            channel,
             data:
-              typeof response === "string"
+              typeof response === 'string'
                 ? response
                 : JSON.stringify(response, null, 2),
-            dataType: typeof response === "string" ? "string" : "json",
+            dataType: typeof response === 'string' ? 'string' : 'json'
           };
           setListenHistory([data, ...listenHistory]);
         });
@@ -148,9 +148,9 @@ function App() {
       const store = {
         key: date.toUTCString(),
         channel: emitChannel,
-        date: date,
+        date,
         data: ack,
-        type: typeof ack === "string" ? "string" : "json",
+        type: typeof ack === 'string' ? 'string' : 'json'
       };
       setAckHistory((items) => [store, ...items]);
     });
@@ -158,9 +158,9 @@ function App() {
     const store = {
       key: date.toUTCString(),
       channel: emitChannel,
-      date: date,
+      date,
       data: dataToEmit,
-      type: typeof dataToEmit === "string" ? "string" : "json",
+      type: typeof dataToEmit === 'string' ? 'string' : 'json'
     };
     setEmitHistory((items) => [store, ...items]);
   };
@@ -171,19 +171,19 @@ function App() {
 
   function clearHistory(stack, channels) {
     switch (stack) {
-      case "emit":
-        setEmitHistory(() => []);
-        break;
-      case "listen":
-        setListenHistory((items) =>
-          items.filter((i) => !channels.includes(i.channel))
-        );
-        break;
-      case "ack":
-        setAckHistory(() => []);
-        break;
-      default:
-        break;
+    case 'emit':
+      setEmitHistory(() => []);
+      break;
+    case 'listen':
+      setListenHistory((items) =>
+        items.filter((i) => !channels.includes(i.channel))
+      );
+      break;
+    case 'ack':
+      setAckHistory(() => []);
+      break;
+    default:
+      break;
     }
   }
 
@@ -244,55 +244,55 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <div className='App'>
       <Container>
         <Row>
-          <Col className="text-right">
-            <span className="small">
+          <Col className='text-right'>
+            <span className='small'>
               ID: <b>{connData.socketId}</b> Server: <b>{connData.server}</b>
             </span>
             {isConnected ? (
               <>
-                <MdCloudDone className="text-success ml-3 h3" />
+                <MdCloudDone className='text-success ml-3 h3' />
                 <MdDoNotDisturb
-                  className="text-danger mx-2 h3"
+                  className='text-danger mx-2 h3'
                   onClick={handleDisconnect}
                 />
               </>
             ) : (
-              <MdCloudOff className="text-danger mx-2 h3" />
+              <MdCloudOff className='text-danger mx-2 h3' />
             )}
           </Col>
         </Row>
 
         <Row>
           <Col>
-            <Tabs defaultActiveKey="listen" className="mb-4 nav-fillx">
-              <Tab eventKey="listen" title="Listen">
+            <Tabs defaultActiveKey='listen' className='mb-4 nav-fillx'>
+              <Tab eventKey='listen' title='Listen'>
                 <Listen
                   listeners={listenTo}
                   addListener={addListener}
                   listenHistory={listenHistory}
                   clearHistory={clearHistory}
-                  stack="listen"
+                  stack='listen'
                 />
               </Tab>
 
-              <Tab eventKey="emit" title="Emit">
+              <Tab eventKey='emit' title='Emit'>
                 <Emitter
                   emitToChannels={emitTo}
                   addEmitTo={addEmitTo}
                   emitData={emitData}
                   emitHistory={emitHistory}
                   clearHistory={clearHistory}
-                  stack="emit"
+                  stack='emit'
                 />
               </Tab>
 
-              <Tab eventKey="ack" title="Ack">
+              <Tab eventKey='ack' title='Ack'>
                 <Ack
                   ackHistory={ackHistory}
-                  stack="ack"
+                  stack='ack'
                   clearHistory={clearHistory}
                 />
               </Tab>
@@ -301,7 +301,7 @@ function App() {
         </Row>
       </Container>
 
-      <Modal show={!isConnected} backdrop="static" centered size="lg">
+      <Modal show={!isConnected} backdrop='static' centered size='lg'>
         <Modal.Header>
           <Modal.Title>Configure connection</Modal.Title>
         </Modal.Header>
