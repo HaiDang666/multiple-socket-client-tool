@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Form, Col, Button, Alert } from "react-bootstrap";
+import React, { useState, useEffect } from 'react';
+import { Form, Col, Button, Alert } from 'react-bootstrap';
 
 export default function Connection({
   connData,
@@ -22,13 +22,13 @@ export default function Connection({
     const errors = [];
 
     if (numberConnection <= 0) {
-      errors.push(Error("numberConnection cannot be less than 1"));
+      errors.push(Error('numberConnection cannot be less than 1'));
     }
 
     try {
       JSON.parse(config);
     } catch (e) {
-      console.log("cannot parse config json", e);
+      console.log('cannot parse config json', e);
       errors.push(e);
     }
 
@@ -52,65 +52,65 @@ export default function Connection({
   return (
     <>
       <Alert
-        variant="danger"
+        variant='danger'
         show={connData.errors.length > 0 || formValid.length > 0}
       >
-        {connData.errors.join(", ")} {formValid.join(", ")}
+        {connData.errors.join(', ')} {formValid.join(', ')}
       </Alert>
 
       <Form onSubmit={onFormSubmit}>
-        <Form.Row className="mb-2">
+        <Form.Row className='mb-2'>
           <Col>
             <Form.Label>Socket Server</Form.Label>
             <Form.Control
               required
               value={serverUrl}
-              placeholder="server url"
-              type="url"
+              placeholder='server url'
+              type='url'
               onChange={(e) => setServerUrl(e.target.value)}
             />
           </Col>
         </Form.Row>
-        <Form.Row className="mb-2">
+        <Form.Row className='mb-2'>
           <Col>
             <Form.Label>JSON config</Form.Label>
             <Form.Control
-              as="textarea"
-              placeholder="JSON config"
+              as='textarea'
+              placeholder='JSON config'
               value={config}
               onChange={(e) => setConfig(e.target.value)}
             />
           </Col>
         </Form.Row>
-        <Form.Row className="mb-2">
+        <Form.Row className='mb-2'>
           <Col>
             <Form.Label>Number of Connection</Form.Label>
             <Form.Control
-              as="input"
-              type="number"
-              placeholder="Number of connection"
+              as='input'
+              type='number'
+              placeholder='Number of connection'
               value={numberConnection}
               onChange={(e) => setNumberConnection(e.target.value)}
             />
           </Col>
         </Form.Row>
-        <Form.Row className="mb-2">
+        <Form.Row className='mb-2'>
           <Col>
             <Form.Label>Event after client connect</Form.Label>
             <Form.Control
-              as="input"
-              type="text"
-              placeholder="Event after client connect"
+              as='input'
+              type='text'
+              placeholder='Event after client connect'
               value={welcomeEvent}
               onChange={(e) => setWelcomeEvent(e.target.value.trim())}
             />
           </Col>
         </Form.Row>
-        <Form.Row className="mb-2">
+        <Form.Row className='mb-2'>
           <Col>
             <Form.Label>Socket Version</Form.Label>
             <Form.Control
-              as="select"
+              as='select'
               value={version}
               onChange={(e) => setVersion(e.target.value)}
               custom
@@ -120,20 +120,20 @@ export default function Connection({
             </Form.Control>
           </Col>
         </Form.Row>
-        <Form.Row className="mt-2">
+        <Form.Row className='mt-2'>
           <Col>
-            <Form.Text className="mb-2">
-              <strong>Listen to</strong>: {eventsToListenFor.join(", ")}{" "}
-              <strong>Emit to</strong>: {emitTo.join(", ")}
+            <Form.Text className='mb-2'>
+              <strong>Listen to</strong>: {eventsToListenFor.join(', ')}{' '}
+              <strong>Emit to</strong>: {emitTo.join(', ')}
             </Form.Text>
 
             <Button
-              variant="success"
-              type="submit"
+              variant='success'
+              type='submit'
               block
               disabled={loading}
             >
-              {loading ? "Connecting..." : "Connect"}
+              {loading ? 'Connecting...' : 'Connect'}
             </Button>
           </Col>
         </Form.Row>

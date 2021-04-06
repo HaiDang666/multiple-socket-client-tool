@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Form, Col, Button, Alert } from 'react-bootstrap';
 import History from './history.jsx';
 
@@ -26,14 +26,14 @@ export default function Emitter({ emitToChannels, addEmitTo, emitData, emitHisto
     setEmitText(() => '');
     setEmitFormErrors(() => []);
     emitData(emitChannel, dataToEmit);
-  }
+  };
 
   const onAddEmitterSubmit = (e) => {
     e.preventDefault();
     addEmitTo(newEmitter);
     setNewEmitter('');
     setEmitChannel(() => newEmitter);
-  }
+  };
 
   const eventOptions = emitToChannels.map((item) => {
     return (
@@ -43,13 +43,13 @@ export default function Emitter({ emitToChannels, addEmitTo, emitData, emitHisto
 
   return (
     <div>
-      <Form onSubmit={onAddEmitterSubmit} className="mb-3">
+      <Form onSubmit={onAddEmitterSubmit} className='mb-3'>
         <Form.Row>
           <Col xs={4}>
-            <Form.Control size="sm" value={newEmitter} onChange={(e) => setNewEmitter(e.target.value)} placeholder="Event name" />
+            <Form.Control size='sm' value={newEmitter} onChange={(e) => setNewEmitter(e.target.value)} placeholder='Event name' />
           </Col>
           <Col xs={2}>
-            <Button size="sm" variant="info" type="submit" block>Add</Button>
+            <Button size='sm' variant='info' type='submit' block>Add</Button>
           </Col>
         </Form.Row>
       </Form>
@@ -57,34 +57,34 @@ export default function Emitter({ emitToChannels, addEmitTo, emitData, emitHisto
       <hr />
 
       <Form onSubmit={onEmitDataSubmit}>
-        <Alert variant="danger" show={emitFormErrors.length > 0}>
+        <Alert variant='danger' show={emitFormErrors.length > 0}>
           {emitFormErrors.join(', ')}
         </Alert>
-        <Form.Row className="mb-2">
+        <Form.Row className='mb-2'>
           <Col>
-            <Form.Control as="select" value={emitChannel} onChange={(e) => setEmitChannel(e.target.value)}>
+            <Form.Control as='select' value={emitChannel} onChange={(e) => setEmitChannel(e.target.value)}>
               {eventOptions}
             </Form.Control>
           </Col>
           <Col>
-            <Form.Check type="switch" id="is-json" label="JSON data" value={emitDataJson} onChange={(e) => setEmittDataJson(() => e.target.checked)} placeholder="data..." className="pt-3 pl-5" />
+            <Form.Check type='switch' id='is-json' label='JSON data' value={emitDataJson} onChange={(e) => setEmittDataJson(() => e.target.checked)} placeholder='data...' className='pt-3 pl-5' />
           </Col>
         </Form.Row>
-        <Form.Row className="mb-2">
+        <Form.Row className='mb-2'>
           <Col>
-            <Form.Control as="textarea" value={emitText} onChange={(e) => setEmitText(e.target.value)} />
+            <Form.Control as='textarea' value={emitText} onChange={(e) => setEmitText(e.target.value)} />
           </Col>
         </Form.Row>
         <Form.Row>
           <Col>
-            <Button variant="success" type="submit" block>Emit</Button>
+            <Button variant='success' type='submit' block>Emit</Button>
           </Col>
         </Form.Row>
       </Form>
 
       <hr />
-      <div className="mt-4">
-        <History data={emitHistory} emitBack={emitData} title="Messages" clearHistory={clearHistory} stack={stack} />
+      <div className='mt-4'>
+        <History data={emitHistory} emitBack={emitData} title='Messages' clearHistory={clearHistory} stack={stack} />
       </div>
     </div>
   );
