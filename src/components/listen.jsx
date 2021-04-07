@@ -8,7 +8,7 @@ export default function Listen({ listeners, addListener, listenHistory, clearHis
   const [formValidation, setFormValidation] = useState([]);
 
   const getChannelMessages = (channel) => {
-    return listenHistory.filter(item => channel === item.channel);
+    return listenHistory.filter(item => item.channel === channel);
   };
 
   const listenerBoxes = listeners.map((item, index) => {
@@ -25,7 +25,7 @@ export default function Listen({ listeners, addListener, listenHistory, clearHis
 
   const channelTextBoxChange = e => {
     setChannel(e.target.value.trim());
-    setFormValidation(v => []);
+    setFormValidation([]);
     if (listeners.includes(e.target.value)) {
       setFormValidation(v => [...v, 'Event already exists']);
     }

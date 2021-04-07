@@ -39,7 +39,7 @@ function App() {
 
   // Storage
   const [emitHistory, setEmitHistory] = useState([]);
-  const [listenHistory, setListenHistory] = useState({});
+  const [listenHistory, setListenHistory] = useState([]);
   const [ackHistory, setAckHistory] = useState([]);
 
   const createConnection = (url, config, numberConnection, version, welcomeEvent) => {
@@ -77,7 +77,23 @@ function App() {
 
         if (welcomeEvent) {
           connection.socket.once(welcomeEvent, (response) => {
-            console.log(response);
+            const d = new Date();
+            const data = {
+              key: i,
+              channel: welcomeEvent,
+              date: d,
+              data:
+                typeof response === 'string'
+                  ? `socketIndex:${i} - ${response}`
+                  : JSON.stringify(response, null, 2),
+              dataType: typeof response === 'string' ? 'string' : 'json'
+            };
+
+            connection.socket.on('disconnect', () => {
+              handleDisconnect();
+            });
+
+            setListenHistory((items) => [data, ...items]);
           });
         }
 
@@ -118,20 +134,21 @@ function App() {
       const channelsToAdd = [];
       if (!listenTo.includes(channel)) {
         channelsToAdd.push(channel);
-        socket.on(channel, (response) => {
-          console.log('data received', channel, response);
-          const d = new Date();
-          const data = {
-            key: d.toLocaleString(),
-            date: d,
-            channel,
-            data:
-              typeof response === 'string'
-                ? response
-                : JSON.stringify(response, null, 2),
-            dataType: typeof response === 'string' ? 'string' : 'json'
-          };
-          setListenHistory([data, ...listenHistory]);
+        clients.forEach(c => {
+          c.socket.on(channel, (response) => {
+            const d = new Date();
+            const data = {
+              key: c.index,
+              date: d,
+              channel,
+              data:
+                typeof response === 'string'
+                  ? response
+                  : JSON.stringify(response, null, 2),
+              dataType: typeof response === 'string' ? 'string' : 'json'
+            };
+            setListenHistory((items) => [data, ...items]);
+          });
         });
       }
       setListenTo([...channelsToAdd, ...listenTo]);
@@ -143,26 +160,29 @@ function App() {
   };
 
   const emitData = (emitChannel, dataToEmit) => {
-    socket.emit(emitChannel, dataToEmit, (ack) => {
-      const date = new Date();
-      const store = {
-        key: date.toUTCString(),
-        channel: emitChannel,
-        date,
-        data: ack,
-        type: typeof ack === 'string' ? 'string' : 'json'
-      };
-      setAckHistory((items) => [store, ...items]);
+    clients.forEach(c => {
+      c.socket.emit(emitChannel, dataToEmit, () => {
+        // const date = new Date();
+        // const store = {
+        //   key: date.toUTCString(),
+        //   channel: emitChannel,
+        //   date,
+        //   data: ack,
+        //   type: typeof ack === 'string' ? 'string' : 'json'
+        // };
+        // setAckHistory((items) => [store, ...items]);
+        console.log('emited');
+      });
+      // const date = new Date();
+      // const store = {
+      //   key: date.toUTCString(),
+      //   channel: emitChannel,
+      //   date,
+      //   data: dataToEmit,
+      //   type: typeof dataToEmit === 'string' ? 'string' : 'json'
+      // };
+      // setEmitHistory((items) => [store, ...items]);
     });
-    const date = new Date();
-    const store = {
-      key: date.toUTCString(),
-      channel: emitChannel,
-      date,
-      data: dataToEmit,
-      type: typeof dataToEmit === 'string' ? 'string' : 'json'
-    };
-    setEmitHistory((items) => [store, ...items]);
   };
 
   // const histryStackChannelsFilter = (item, channels) => {
@@ -241,6 +261,7 @@ function App() {
 
     setClients([]);
     setListenTo([]);
+    setListenHistory([]);
   }
 
   return (

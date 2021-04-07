@@ -28,7 +28,6 @@ export default function Connection({
     try {
       JSON.parse(config);
     } catch (e) {
-      console.log('cannot parse config json', e);
       errors.push(e);
     }
 
