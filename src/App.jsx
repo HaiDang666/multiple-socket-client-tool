@@ -20,11 +20,13 @@ function App() {
   isReadyRef.current = isReady;
 
   const [connData, setConnData] = useState({
+    
     server: 'http://localhost:8080',
     config:
-      '{"path": "/socket.io", "forceNew": true, "reconnectionAttempts": 3, "timeout": 2000}',
+       '{"path": "/socket.io", "forceNew": true, "reconnectionAttempts": 3, "timeout": 2000}',
+    // config: '{"reconnection delay": 0, "reopen delay": 0, "force new connection": true, "transports": ["websocket"]}',
     numberConnection: 1,
-    version: 3,
+    version: 2,
     welcomeEvent: '',
     errors: []
   });
@@ -90,7 +92,7 @@ function App() {
             };
 
             connection.socket.on('disconnect', () => {
-              handleDisconnect();
+              connection.socket.connect();
             });
 
             setListenHistory((items) => [data, ...items]);
